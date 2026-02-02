@@ -1,80 +1,122 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Love 💍</title>
+  <title>For You 💖</title>
   <style>
     body {
-      margin:0;
-      padding:0;
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      background: linear-gradient(to top, #ffdde1, #ee9ca7);
+      background: linear-gradient(#ff9a9e, #fad0c4);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-family: Arial;
       overflow: hidden;
     }
-    h1 {
-      font-size: 36px;
-      color: #ff2e63;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 5px pink;
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 25px;
+      text-align: center;
+      width: 330px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      animation: pop 0.8s;
+      z-index: 2;
     }
+
+    h1 { color: #ff2e63; }
+    p { margin: 12px 0; }
+
     button {
-      padding: 15px 25px;
-      font-size: 20px;
-      margin: 10px;
-      border:none;
-      border-radius: 30px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
       background: #ff4d6d;
       color: white;
       cursor: pointer;
-      position: relative;
+      margin: 8px;
     }
-    .confetti {
+
+    button.no { background:#555; }
+
+    .shake { animation: shake 0.4s; }
+
+    @keyframes shake {
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-6px)}
+      50%{transform:translateX(6px)}
+      75%{transform:translateX(-6px)}
+      100%{transform:translateX(0)}
+    }
+
+    /* 🎆 Fireworks */
+    .firework {
       position: absolute;
-      width: 10px;
-      height: 10px;
-      animation: fall 3s linear infinite;
+      width: 6px;
+      height: 6px;
+      background: transparent;
+      border-radius: 50%;
+      box-shadow:
+        0 0 red,
+        0 0 yellow,
+        0 0 pink,
+        0 0 cyan,
+        0 0 violet;
+      animation: explode 1s ease-out infinite;
     }
-    @keyframes fall {
-      0% {transform: translateY(-50px) rotate(0deg);}
-      100% {transform: translateY(700px) rotate(360deg);}
+
+    @keyframes explode {
+      from { transform: scale(0); opacity:1; }
+      to { transform: scale(6); opacity:0; }
     }
   </style>
 </head>
 
 <body>
 
-<h1>After all our memories…</h1>
-<h2>Will you be mine forever? 💍</h2>
+<!-- 🎶 YES MUSIC -->
+<audio id="yesMusic">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
 
-<button id="yesBtn" onclick="yesClick()">YES 😍</button>
-<button id="noBtn" onclick="noMove(this)">NO 😏</button>
+<div class="box" id="box">
+  <h1>💖 My Love 💖</h1>
+  <p>Every question, every memory…</p>
+  <p>💍 Will you be mine forever?</p>
 
-<p id="message" style="margin-top:20px; font-size:18px; color:#ff2e63;"></p>
+  <button onclick="yesAnswer()">YES 💕</button>
+  <button class="no" onclick="noAnswer()">NO 🙄</button>
+
+  <div id="response"></div>
+</div>
 
 <script>
-  function yesClick() {
-    document.getElementById("message").innerHTML =
-      "🥹❤️ Nenu ninnu premistunanu 💕 You made me the happiest!";
+function yesAnswer(){
+  document.getElementById("response").innerHTML =
+    "😭❤️ SHE SAID YESSS!! Forever starts now 💍💖";
 
-    for (let i = 0; i < 100; i++) {
-      let confetti = document.createElement("div");
-      confetti.classList.add("confetti");
-      confetti.style.left = Math.random() * window.innerWidth + "px";
-      confetti.style.background = `hsl(${Math.random()*360}, 100%, 70%)`;
-      document.body.appendChild(confetti);
-      setTimeout(() => confetti.remove(), 3000);
-    }
-  }
+  document.getElementById("yesMusic").play();
 
-  function noMove(btn) {
-    btn.style.position = "absolute";
-    btn.style.top = Math.random() * (window.innerHeight - 100) + "px";
-    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+  // fireworks
+  for(let i=0;i<20;i++){
+    let f=document.createElement("div");
+    f.className="firework";
+    f.style.left=Math.random()*100+"vw";
+    f.style.top=Math.random()*100+"vh";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
   }
+}
+
+function noAnswer(){
+  const box=document.getElementById("box");
+  box.classList.add("shake");
+  document.getElementById("response").innerHTML =
+    "😤 NO not allowed… you’re already mine 😈💍❤️";
+  setTimeout(()=>box.classList.remove("shake"),400);
+}
 </script>
 
 </body>
