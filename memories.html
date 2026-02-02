@@ -35,39 +35,67 @@
       border-radius: 10px;
       padding: 8px;
     }
+
     .shake { animation: shake 0.3s; }
+
     @keyframes shake {
       0%{transform:translateX(0)}
-      25%{transform:translateX(-5px)}
-      50%{transform:translateX(5px)}
-      75%{transform:translateX(-5px)}
+      25%{transform:translateX(-6px)}
+      50%{transform:translateX(6px)}
+      75%{transform:translateX(-6px)}
       100%{transform:translateX(0)}
     }
+
     @keyframes fadeIn {
       from {opacity:0; transform:scale(0.9);}
       to {opacity:1; transform:scale(1);}
     }
+
+    /* 💖 BIG LOVE MESSAGE */
+    .big-love {
+      font-size: 26px;
+      font-weight: bold;
+      color: #ff2e63;
+      animation: popBig 0.6s ease;
+    }
+
+    /* 💔 BIG WARNING MESSAGE */
+    .big-warning {
+      font-size: 24px;
+      font-weight: bold;
+      color: #b00020;
+      animation: warningPulse 0.6s ease;
+    }
+
+    @keyframes popBig {
+      0% { transform: scale(0.6); opacity: 0; }
+      70% { transform: scale(1.4); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes warningPulse {
+      0% { transform: scale(0.7); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
     .heart {
       position: absolute;
-      animation: float 2s linear forwards;
+      animation: float 2.5s linear forwards;
     }
+
     @keyframes float {
       from {transform:translateY(0); opacity:1;}
-      to {transform:translateY(-150px); opacity:0;}
+      to {transform:translateY(-200px); opacity:0;}
     }
   </style>
 </head>
 
 <body>
 
-<!-- 🎵 HAPPY & SAD MUSIC -->
-<audio id="happyMusic">
-  <source src="song.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="sadMusic">
-  <source src="sad.mp3" type="audio/mpeg">
-</audio>
+<!-- 🎵 MUSIC -->
+<audio id="happyMusic"><source src="song.mp3"></audio>
+<audio id="sadMusic"><source src="sad.mp3"></audio>
 
 <div class="card" id="card">
   <h2 id="question"></h2>
@@ -81,6 +109,18 @@ const email = "shamanjayachanthyran@gmail.com";
 const happy = document.getElementById("happyMusic");
 const sad = document.getElementById("sadMusic");
 
+let musicTimer;
+
+function playFor15Seconds(audio){
+  clearTimeout(musicTimer);
+  audio.currentTime = 0;
+  audio.play();
+  musicTimer = setTimeout(()=>{
+    audio.pause();
+    audio.currentTime = 0;
+  },15000);
+}
+
 const loveQuotes = [
   "❤️ You are my today and all my tomorrows.",
   "💖 My heart chose you, always.",
@@ -89,32 +129,20 @@ const loveQuotes = [
 ];
 
 const sadMessages = [
-  "😤 Heyyy that hurt my hearttt 💔",
-  "🥺 Oii nooo, my heart is crying…",
-  "💔 Wrong answer baby… try again 🥹",
-  "😢 You broke my tiny heart just now",
-  "😈 Wrong! Come on, you know me better"
+  "😤 HEYYY THAT HURT MY HEART 💔",
+  "🥺 NOOOO BABY WRONG 😭",
+  "💔 TRY AGAINNNNN 🥹",
+  "😢 MY HEART IS CRYING",
+  "😈 WRONG! YOU CAN DO BETTER"
 ];
 
 const quiz = [
-  { q:"How much do you love me?",
-    options:["Little","More","I no love","Infinity ❤️"], answer:3 },
-
-  { q:"What is your first gift from me?",
-    options:["Chocolate","Laici","McD","Bricks"], answer:0 },
-
-  { q:"When we hugged and kissed first?",
-    options:["21/06/2025","22/06/2025","20/06/2025","25/06/2025"], answer:2 },
-
-  { q:"What is our anniversary date?",
-    options:["20/12/2025","21/12/2025","22/12/2025","23/12/2025"], answer:0 },
-
-  { q:"Did I know everything about you?",
-    options:["Yes","No"], answer:0 },
-
-  { q:"What is my favourite food?",
-    options:["Gongura","Mutton","Chicken","You ❤️"], answer:3 },
-
+  { q:"How much do you love me?", options:["Little","More","I no love","Infinity ❤️"], answer:3 },
+  { q:"What is your first gift from me?", options:["Chocolate","Laici","McD","Bricks"], answer:0 },
+  { q:"When we hugged and kissed first?", options:["21/06/2025","22/06/2025","20/06/2025","25/06/2025"], answer:2 },
+  { q:"What is our anniversary date?", options:["20/12/2025","21/12/2025","22/12/2025","23/12/2025"], answer:0 },
+  { q:"Did I know everything about you?", options:["Yes","No"], answer:0 },
+  { q:"What is my favourite food?", options:["Gongura","Mutton","Chicken","You ❤️"], answer:3 },
   { q:"What do you wanna say to me now?", input:true },
   { q:"What is the most irritating thing about me?", input:true },
   { q:"What should I change in myself?", input:true },
@@ -125,7 +153,9 @@ let current = 0;
 let answers = [];
 
 function loadQuestion(){
-  document.getElementById("message").innerHTML = "";
+  const msg = document.getElementById("message");
+  msg.className = "";
+  msg.innerHTML = "";
   document.getElementById("options").innerHTML = "";
   document.getElementById("question").innerText = quiz[current].q;
 
@@ -142,37 +172,39 @@ function loadQuestion(){
 }
 
 function hearts(){
-  for(let i=0;i<12;i++){
+  for(let i=0;i<18;i++){
     let h=document.createElement("div");
     h.className="heart";
-    h.innerText=["❤️","💖","💘","💝"][Math.floor(Math.random()*4)];
+    h.innerText=["❤️","💖","💘","💝","😍"][Math.floor(Math.random()*5)];
     h.style.left=Math.random()*window.innerWidth+"px";
-    h.style.top="65%";
-    h.style.fontSize=(Math.random()*20+18)+"px";
+    h.style.top="70%";
+    h.style.fontSize=(Math.random()*30+30)+"px"; // 🔥 BIG
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),2000);
+    setTimeout(()=>h.remove(),2500);
   }
 }
 
 function check(i){
-  if(i===quiz[current].answer){
-    sad.pause(); sad.currentTime=0;
-    happy.play();
+  const msg = document.getElementById("message");
 
-    document.getElementById("message").innerHTML =
-      loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
+  if(i === quiz[current].answer){
+    sad.pause(); sad.currentTime=0;
+    playFor15Seconds(happy);
+
+    msg.className="big-love";
+    msg.innerHTML = loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
 
     hearts();
-    setTimeout(()=>{current++;loadQuestion();},1200);
+    setTimeout(()=>{current++;loadQuestion();},1400);
   } else {
     happy.pause(); happy.currentTime=0;
-    sad.play();
+    playFor15Seconds(sad);
 
     document.getElementById("card").classList.add("shake");
-    document.getElementById("message").innerText =
-      sadMessages[Math.floor(Math.random()*sadMessages.length)];
+    msg.className="big-warning";
+    msg.innerText = sadMessages[Math.floor(Math.random()*sadMessages.length)];
 
-    setTimeout(()=>document.getElementById("card").classList.remove("shake"),300);
+    setTimeout(()=>document.getElementById("card").classList.remove("shake"),400);
   }
 }
 
@@ -181,14 +213,12 @@ function saveText(){
   if(!t){ alert("Please write something 💌"); return; }
   answers.push(quiz[current].q + ": " + t);
   current++;
-  if(current<quiz.length) loadQuestion();
-  else sendMail();
+  current<quiz.length ? loadQuestion() : sendMail();
 }
 
 function sendMail(){
   let body = encodeURIComponent(answers.join("\n\n"));
-  window.location.href =
-    `mailto:${email}?subject=💖 Love Answers&body=${body}`;
+  window.location.href=`mailto:${email}?subject=💖 Love Answers&body=${body}`;
 }
 
 loadQuestion();
