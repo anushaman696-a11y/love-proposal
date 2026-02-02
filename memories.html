@@ -62,7 +62,7 @@
 
 <body>
 
-<audio id="bgm" autoplay loop>
+<audio autoplay loop>
   <source src="en_moochava_pesvhave.mp3" type="audio/mpeg">
 </audio>
 
@@ -87,7 +87,7 @@
       love: "Yesss ❤️ Our first chocolate memory 🥹"
     },
     {
-      q: "💌 What do you want for this Valentine’s day? (Type your message below)",
+      q: "💌 What do you want for this Valentine’s day?",
       input: true
     }
   ];
@@ -95,7 +95,6 @@
   let current = 0;
 
   function loadQuestion() {
-    const card = document.getElementById("card");
     document.getElementById("message").innerHTML = "";
     document.getElementById("options").innerHTML = "";
 
@@ -103,13 +102,14 @@
     document.getElementById("question").innerText = q.q;
 
     if (q.input) {
-      document.getElementById("options").innerHTML =
+      document.getElementById("options").innerHTML = `
         <input type="text" id="valentineMsg" placeholder="Type your message...">
-         <br><button onclick="submitInput()">Enter 💌</button>;
+        <br><button onclick="submitInput()">Enter 💌</button>
+      `;
     } else {
       let opts = "";
       q.options.forEach((opt, i) => {
-        opts += <button onclick="check(${i})">${opt}</button><br>;
+        opts += `<button onclick="check(${i})">${opt}</button><br>`;
       });
       document.getElementById("options").innerHTML = opts;
     }
@@ -119,11 +119,11 @@
     const card = document.getElementById("card");
     if (i === quiz[current].answer) {
       document.getElementById("message").innerHTML =
-        <div class="heart">❤️</div>${quiz[current].love};
+        `<div class="heart">❤️</div>${quiz[current].love}`;
       setTimeout(() => {
         current++;
         if (current < quiz.length) loadQuestion();
-        else window.location.href = "final.html";
+        else window.location.href = "proposal.html";
       }, 1200);
     } else {
       card.classList.add("shake");
@@ -140,9 +140,9 @@
       return;
     }
     document.getElementById("message").innerHTML =
-      Noted! 🥰 Your message: "${msg}";
+      `Noted! 🥰 Your message: "${msg}"`;
     setTimeout(() => {
-      window.location.href = "final.html";
+      window.location.href = "proposal.html";
     }, 1200);
   }
 
