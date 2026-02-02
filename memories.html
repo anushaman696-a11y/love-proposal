@@ -1,69 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Love Game 💕</title>
+  <title>Our Love Quiz 💕</title>
   <style>
     body {
       background: linear-gradient(#ffdde1, #ee9ca7);
       font-family: Arial;
       text-align: center;
-      padding-top: 50px;
+      padding-top: 60px;
+      overflow: hidden;
     }
     .card {
       background: white;
-      width: 350px;
+      width: 360px;
       margin: auto;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      padding: 22px;
+      border-radius: 22px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
       animation: fadeIn 0.6s;
     }
+    h2 { color:#ff2e63; }
+
     button {
-      padding: 10px 18px;
+      padding: 11px 20px;
       margin: 8px;
       border: none;
-      border-radius: 20px;
+      border-radius: 25px;
       font-size: 15px;
       cursor: pointer;
       background: #ff4d6d;
       color: white;
+      transition: transform 0.2s;
     }
-    .shake {
-      animation: shake 0.3s;
+    button:hover { transform: scale(1.05); }
+
+    textarea {
+      width: 90%;
+      height: 75px;
+      border-radius: 12px;
+      padding: 8px;
+      border:1px solid #ccc;
     }
+
+    .shake { animation: shake 0.35s; }
     @keyframes shake {
-      0% {transform: translateX(0);}
-      25% {transform: translateX(-5px);}
-      50% {transform: translateX(5px);}
-      75% {transform: translateX(-5px);}
-      100% {transform: translateX(0);}
+      0%{transform:translateX(0)}
+      25%{transform:translateX(-6px)}
+      50%{transform:translateX(6px)}
+      75%{transform:translateX(-6px)}
+      100%{transform:translateX(0)}
     }
+
     @keyframes fadeIn {
       from {opacity:0; transform: scale(0.9);}
       to {opacity:1; transform: scale(1);}
     }
-    .heart {
+
+    .heart, .broken {
+      position: absolute;
       font-size: 24px;
-      animation: pop 0.5s;
+      animation: float 2s linear forwards;
     }
-    @keyframes pop {
-      0% {transform: scale(0);}
-      100% {transform: scale(1);}
-    }
-    input[type=text] {
-      padding: 10px;
-      width: 80%;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-top: 10px;
+    @keyframes float {
+      from {transform: translateY(0); opacity:1;}
+      to {transform: translateY(-180px); opacity:0;}
     }
   </style>
 </head>
 
 <body>
 
+<!-- 🎶 Background Music -->
 <audio autoplay loop>
-  <source src="en_moochava_pesvhave.mp3" type="audio/mpeg">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 😢 Sad Sound -->
+<audio id="sadSound">
+  <source src="sad.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card" id="card">
@@ -73,75 +87,122 @@
 </div>
 
 <script>
-  const quiz = [
-    {
-      q: "💖 How much do you love me?",
-      options: ["Little", "More than you", "I no love u", "Infinity"],
-      answer: 3,
-      love: "Correct 😘 Nenu ninnu premistunanu 💕"
-    },
-    {
-      q: "🎁 What is the first gift I gave to you?",
-      options: ["Chocolate", "Bricks", "Laici", "McD"],
-      answer: 0,
-      love: "Yesss ❤️ Our first chocolate memory 🥹"
-    },
-    {
-      q: "💌 What do you want for this Valentine’s day?",
-      input: true
-    }
-  ];
+const email = "shamanjayachanthyran@gmail.com";
 
-  let current = 0;
+const loveQuotes = [
+  "❤️ You are my today and all my tomorrows.",
+  "💖 My heart chose you, always.",
+  "🥹 Loving you is my favorite thing.",
+  "💘 You are my safest place.",
+  "🌸 Every love story is beautiful, but ours is my favorite."
+];
 
-  function loadQuestion() {
-    document.getElementById("message").innerHTML = "";
-    document.getElementById("options").innerHTML = "";
+const hurtMessages = [
+  "💔 Heyyy that hurt my hearttt… try again 😢❤️",
+  "🥺 Ouchhh… my heart just cried a little 💔",
+  "😢 Wrong answer baby… don’t break my heart like this 💕",
+  "💔 Awww nooo… my heart is hurting 😭"
+];
 
-    const q = quiz[current];
-    document.getElementById("question").innerText = q.q;
+const quiz = [
+  { q:"How much do you love me?",
+    options:["Little","More","I no love","Infinity ❤️"], answer:3 },
 
-    if (q.input) {
-      document.getElementById("options").innerHTML = `
-        <input type="text" id="valentineMsg" placeholder="Type your message...">
-        <br><button onclick="submitInput()">Enter 💌</button>
-      `;
-    } else {
-      let opts = "";
-      q.options.forEach((opt, i) => {
-        opts += `<button onclick="check(${i})">${opt}</button><br>`;
-      });
-      document.getElementById("options").innerHTML = opts;
-    }
+  { q:"What is your first gift from me?",
+    options:["Chocolate","Laici","McD","Bricks"], answer:0 },
+
+  { q:"When we hugged and kissed first?",
+    options:["21/06/2025","22/06/2025","20/06/2025","25/06/2025"], answer:2 },
+
+  { q:"What is our anniversary date?",
+    options:["20/12/2025","21/12/2025","22/12/2025","23/12/2025"], answer:0 },
+
+  { q:"Did I know everything about you?",
+    options:["Yes","No"], answer:0 },
+
+  { q:"What is my favourite food?",
+    options:["Gongura","Mutton","Chicken","You ❤️"], answer:3 },
+
+  { q:"What do you wanna say to me now?", input:true },
+  { q:"What is the most irritating thing about me?", input:true },
+  { q:"What should I change in myself?", input:true },
+  { q:"What do you expect from me?", input:true }
+];
+
+let current = 0;
+let answers = [];
+
+function loadQuestion(){
+  document.getElementById("message").innerHTML="";
+  document.getElementById("options").innerHTML="";
+  document.getElementById("question").innerText=quiz[current].q;
+
+  if(quiz[current].input){
+    options.innerHTML=
+      `<textarea id="txt"></textarea><br>
+       <button onclick="saveText()">Send 💌</button>`;
+  } else {
+    quiz[current].options.forEach((o,i)=>{
+      options.innerHTML+=`<button onclick="check(${i})">${o}</button><br>`;
+    });
   }
+}
 
-  function check(i) {
-    const card = document.getElementById("card");
-    if (i === quiz[current].answer) {
-      document.getElementById("message").innerHTML =
-        `<div class="heart">❤️</div>${quiz[current].love}`;
-      setTimeout(() => {
-        current++;
-        if (current < quiz.length) loadQuestion();
-        else window.location.href = "proposal.html";
-      }, 1200);
-    } else {
-      card.classList.add("shake");
-      document.getElementById("message").innerText =
-        "❌ Oops 😏 Wrong! Try again, my love";
-      setTimeout(() => card.classList.remove("shake"), 300);
-    }
+function hearts(){
+  for(let i=0;i<8;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*window.innerWidth+"px";
+    h.style.top="65%";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
   }
+}
 
-  function submitInput() {
-    const msg = document.getElementById("valentineMsg").value;
-    if (msg.trim() === "") {
-      alert("💌 Please write something!");
-      return;
-    }
-    document.getElementById("message").innerHTML =
-      `Noted! 🥰 Your message: "${msg}"`;
-    setTimeout(() => {
-      window.location.href = "proposal.html";
-    }, 1200);
+function brokenHearts(){
+  for(let i=0;i<6;i++){
+    let b=document.createElement("div");
+    b.className="broken";
+    b.innerText="💔";
+    b.style.left=Math.random()*window.innerWidth+"px";
+    b.style.top="65%";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),2000);
   }
+}
+
+function check(i){
+  const card=document.getElementById("card");
+  if(i===quiz[current].answer){
+    message.innerHTML=loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
+    hearts();
+    setTimeout(()=>{current++;loadQuestion();},1300);
+  } else {
+    card.classList.add("shake");
+    document.getElementById("sadSound").play();
+    message.innerText=hurtMessages[Math.floor(Math.random()*hurtMessages.length)];
+    brokenHearts();
+    setTimeout(()=>card.classList.remove("shake"),350);
+  }
+}
+
+function saveText(){
+  let t=txt.value.trim();
+  if(!t){alert("Please write something 💌");return;}
+  answers.push(quiz[current].q+": "+t);
+  current++;
+  if(current<quiz.length) loadQuestion();
+  else sendMail();
+}
+
+function sendMail(){
+  let body=encodeURIComponent(answers.join("\n\n"));
+  window.location.href=`mailto:${email}?subject=💖 Love Answers&body=${body}`;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
