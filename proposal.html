@@ -36,7 +36,6 @@
       position: absolute;
       width: 10px;
       height: 10px;
-      background: #ff4d6d;
       animation: fall 3s linear infinite;
     }
     @keyframes fall {
@@ -48,11 +47,11 @@
 
 <body>
 
-<h1>After all our memories…</h1>
+<h1>After all our memories… 💕</h1>
 <h2>Will you be mine forever? 💍</h2>
 
-<button id="yesBtn" onclick="yesClick()">YES 😍</button>
-<button id="noBtn" onclick="noMove(this)">NO 😏</button>
+<button onclick="yesClick()">YES 😍</button>
+<button id="noBtn" onclick="noMove()">NO 😏</button>
 
 <p id="message" style="margin-top:20px; font-size:18px; color:#ff2e63;"></p>
 
@@ -60,21 +59,23 @@
   function yesClick() {
     document.getElementById("message").innerHTML =
       "🥹❤️ Nenu ninnu premistunanu 💕 You made me the happiest!";
-    // confetti effect
-    for(let i=0;i<100;i++){
+
+    for (let i = 0; i < 100; i++) {
       let confetti = document.createElement("div");
-      confetti.classList.add("confetti");
-      confetti.style.left = Math.random()*window.innerWidth + "px";
-      confetti.style.background = hsl(${Math.random()*360}, 100%, 70%);
+      confetti.className = "confetti";
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.background =
+        `hsl(${Math.random() * 360}, 100%, 70%)`;
       document.body.appendChild(confetti);
-      setTimeout(()=>{confetti.remove()},3000);
+      setTimeout(() => confetti.remove(), 3000);
     }
   }
 
-  function noMove(btn) {
+  function noMove() {
+    const btn = document.getElementById("noBtn");
     btn.style.position = "absolute";
-    btn.style.top = Math.random()*(window.innerHeight-100) + "px";
-    btn.style.left = Math.random()*(window.innerWidth-100) + "px";
+    btn.style.top = Math.random() * (window.innerHeight - 100) + "px";
+    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
   }
 </script>
 
