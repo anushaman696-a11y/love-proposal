@@ -62,19 +62,6 @@
       font-size: 26px;
       font-weight: bold;
       color: #b00020;
-      animation: warningPulse 0.6s ease;
-    }
-
-    @keyframes popBig {
-      0% { transform: scale(0.6); opacity: 0; }
-      70% { transform: scale(1.4); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes warningPulse {
-      0% { transform: scale(0.7); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1); }
     }
 
     .heart {
@@ -106,6 +93,8 @@ const happy = document.getElementById("happyMusic");
 const sad = document.getElementById("sadMusic");
 
 let musicTimer;
+let current = 0;
+let answers = []; // 💾 STORED ANSWERS
 
 function playFor15Seconds(audio){
   clearTimeout(musicTimer);
@@ -128,8 +117,7 @@ const sadMessages = [
   "😤 HEYYY THAT HURT MY HEART 💔",
   "🥺 NOOOO BABY WRONG 😭",
   "💔 TRY AGAINNNNN 🥹",
-  "😢 MY HEART IS CRYING",
-  "😈 WRONG! YOU CAN DO BETTER"
+  "😢 MY HEART IS CRYING"
 ];
 
 const quiz = [
@@ -145,12 +133,8 @@ const quiz = [
   { q:"What do you expect from me?", input:true }
 ];
 
-let current = 0;
-
 function loadQuestion(){
-  const msg = document.getElementById("message");
-  msg.className = "";
-  msg.innerHTML = "";
+  document.getElementById("message").innerHTML = "";
   document.getElementById("options").innerHTML = "";
   document.getElementById("question").innerText = quiz[current].q;
 
@@ -167,56 +151,61 @@ function loadQuestion(){
 }
 
 function hearts(){
-  for(let i=0;i<20;i++){
+  for(let i=0;i<15;i++){
     let h=document.createElement("div");
     h.className="heart";
-    h.innerText=["❤️","💖","💘","💝","😍"][Math.floor(Math.random()*5)];
+    h.innerText="❤️";
     h.style.left=Math.random()*window.innerWidth+"px";
     h.style.top="70%";
-    h.style.fontSize=(Math.random()*35+30)+"px";
+    h.style.fontSize=(Math.random()*30+25)+"px";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),2500);
   }
 }
 
 function check(i){
-  const msg = document.getElementById("message");
+  answers.push({
+    question: quiz[current].q,
+    answer: quiz[current].options[i],
+    correct: i === quiz[current].answer
+  });
 
   if(i === quiz[current].answer){
-    sad.pause(); sad.currentTime=0;
     playFor15Seconds(happy);
-
-    msg.className="big-love";
-    msg.innerHTML = loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
-
+    document.getElementById("message").className="big-love";
+    document.getElementById("message").innerHTML =
+      loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
     hearts();
-    setTimeout(()=>{current++;loadQuestion();},1400);
+    setTimeout(()=>{current++;loadQuestion();},1200);
   } else {
-    happy.pause(); happy.currentTime=0;
     playFor15Seconds(sad);
-
-    document.getElementById("card").classList.add("shake");
-    msg.className="big-warning";
-    msg.innerText = sadMessages[Math.floor(Math.random()*sadMessages.length)];
-
-    setTimeout(()=>document.getElementById("card").classList.remove("shake"),400);
+    document.getElementById("message").className="big-warning";
+    document.getElementById("message").innerText =
+      sadMessages[Math.floor(Math.random()*sadMessages.length)];
   }
 }
 
 function saveText(){
-  let t=document.getElementById("txt").value.trim();
+  let t = document.getElementById("txt").value.trim();
   if(!t){ alert("Please write something 💌"); return; }
+
+  answers.push({
+    question: quiz[current].q,
+    answer: t
+  });
+
   current++;
   current < quiz.length ? loadQuestion() : showFinalMessage();
 }
 
 function showFinalMessage(){
+  localStorage.setItem("loveQuizAnswers", JSON.stringify(answers));
+
   document.getElementById("question").innerHTML = "💖 Quiz Finished 💖";
   document.getElementById("options").innerHTML = "";
-
-  const msg = document.getElementById("message");
-  msg.className = "big-love";
-  msg.innerHTML = "Thank you for answering everything 🥹💘<br>I love you infinity ♾️❤️";
+  document.getElementById("message").className = "big-love";
+  document.getElementById("message").innerHTML =
+    "Thank you for answering everything 🥹💘<br>I love you infinity ♾️❤️";
 
   hearts();
   playFor15Seconds(happy);
