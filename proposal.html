@@ -47,11 +47,11 @@
 
 <body>
 
-<h1>After all our memories… 💕</h1>
+<h1>After all our memories…</h1>
 <h2>Will you be mine forever? 💍</h2>
 
-<button onclick="yesClick()">YES 😍</button>
-<button id="noBtn" onclick="noMove()">NO 😏</button>
+<button id="yesBtn" onclick="yesClick()">YES 😍</button>
+<button id="noBtn" onclick="noMove(this)">NO 😏</button>
 
 <p id="message" style="margin-top:20px; font-size:18px; color:#ff2e63;"></p>
 
@@ -62,17 +62,15 @@
 
     for (let i = 0; i < 100; i++) {
       let confetti = document.createElement("div");
-      confetti.className = "confetti";
+      confetti.classList.add("confetti");
       confetti.style.left = Math.random() * window.innerWidth + "px";
-      confetti.style.background =
-        `hsl(${Math.random() * 360}, 100%, 70%)`;
+      confetti.style.background = `hsl(${Math.random()*360}, 100%, 70%)`;
       document.body.appendChild(confetti);
       setTimeout(() => confetti.remove(), 3000);
     }
   }
 
-  function noMove() {
-    const btn = document.getElementById("noBtn");
+  function noMove(btn) {
     btn.style.position = "absolute";
     btn.style.top = Math.random() * (window.innerHeight - 100) + "px";
     btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
