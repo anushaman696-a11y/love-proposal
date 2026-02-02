@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Love 💍</title>
+  <style>
+    body {
+      margin:0;
+      padding:0;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      background: linear-gradient(to top, #ffdde1, #ee9ca7);
+      font-family: Arial;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 36px;
+      color: #ff2e63;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px pink;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 20px;
+      margin: 10px;
+      border:none;
+      border-radius: 30px;
+      background: #ff4d6d;
+      color: white;
+      cursor: pointer;
+      position: relative;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff4d6d;
+      animation: fall 3s linear infinite;
+    }
+    @keyframes fall {
+      0% {transform: translateY(-50px) rotate(0deg);}
+      100% {transform: translateY(700px) rotate(360deg);}
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>After all our memories…</h1>
+<h2>Will you be mine forever? 💍</h2>
+
+<button id="yesBtn" onclick="yesClick()">YES 😍</button>
+<button id="noBtn" onclick="noMove(this)">NO 😏</button>
+
+<p id="message" style="margin-top:20px; font-size:18px; color:#ff2e63;"></p>
+
+<script>
+  function yesClick() {
+    document.getElementById("message").innerHTML =
+      "🥹❤️ Nenu ninnu premistunanu 💕 You made me the happiest!";
+    // confetti effect
+    for(let i=0;i<100;i++){
+      let confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+      confetti.style.left = Math.random()*window.innerWidth + "px";
+      confetti.style.background = hsl(${Math.random()*360}, 100%, 70%);
+      document.body.appendChild(confetti);
+      setTimeout(()=>{confetti.remove()},3000);
+    }
+  }
+
+  function noMove(btn) {
+    btn.style.position = "absolute";
+    btn.style.top = Math.random()*(window.innerHeight-100) + "px";
+    btn.style.left = Math.random()*(window.innerWidth-100) + "px";
+  }
+</script>
+
+</body>
+</html>
