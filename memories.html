@@ -5,44 +5,49 @@
   <style>
     body {
       background: linear-gradient(#ffdde1, #ee9ca7);
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       text-align: center;
       padding-top: 60px;
       overflow: hidden;
     }
+
     .card {
       background: white;
-      width: 350px;
+      width: 360px;
       margin: auto;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+      padding: 22px;
+      border-radius: 22px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.3);
       animation: fadeIn 0.5s;
     }
+
     button {
-      padding: 10px 18px;
+      padding: 12px 20px;
       margin: 8px;
       border: none;
-      border-radius: 20px;
-      font-size: 15px;
+      border-radius: 22px;
+      font-size: 16px;
       cursor: pointer;
       background: #ff4d6d;
       color: white;
-    }
-    textarea {
       width: 90%;
-      height: 70px;
-      border-radius: 10px;
-      padding: 8px;
     }
 
-    .shake { animation: shake 0.3s; }
+    textarea {
+      width: 90%;
+      height: 80px;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .shake { animation: shake 0.35s; }
 
     @keyframes shake {
       0%{transform:translateX(0)}
-      25%{transform:translateX(-6px)}
-      50%{transform:translateX(6px)}
-      75%{transform:translateX(-6px)}
+      25%{transform:translateX(-7px)}
+      50%{transform:translateX(7px)}
+      75%{transform:translateX(-7px)}
       100%{transform:translateX(0)}
     }
 
@@ -52,26 +57,31 @@
     }
 
     .big-love {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: bold;
       color: #ff2e63;
-      animation: popBig 0.6s ease;
+      animation: pop 0.5s;
     }
 
     .big-warning {
-      font-size: 26px;
+      font-size: 30px;
       font-weight: bold;
       color: #b00020;
     }
 
+    @keyframes pop {
+      from {transform:scale(0.8);}
+      to {transform:scale(1);}
+    }
+
     .heart {
       position: absolute;
-      animation: float 2.5s linear forwards;
+      animation: float 2.8s linear forwards;
     }
 
     @keyframes float {
       from {transform:translateY(0); opacity:1;}
-      to {transform:translateY(-220px); opacity:0;}
+      to {transform:translateY(-260px); opacity:0;}
     }
   </style>
 </head>
@@ -92,13 +102,16 @@
 const happy = document.getElementById("happyMusic");
 const sad = document.getElementById("sadMusic");
 
-let musicTimer;
 let current = 0;
-let answers = []; // 💾 STORED ANSWERS
+let answers = [];
+let musicTimer;
 
+/* ⏱️ music for 15 seconds */
 function playFor15Seconds(audio){
   clearTimeout(musicTimer);
-  audio.currentTime = 0;
+  happy.pause(); sad.pause();
+  happy.currentTime = 0; sad.currentTime = 0;
+
   audio.play();
   musicTimer = setTimeout(()=>{
     audio.pause();
@@ -106,6 +119,7 @@ function playFor15Seconds(audio){
   },15000);
 }
 
+/* 💖 texts */
 const loveQuotes = [
   "❤️ You are my today and all my tomorrows.",
   "💖 My heart chose you, always.",
@@ -115,11 +129,12 @@ const loveQuotes = [
 
 const sadMessages = [
   "😤 HEYYY THAT HURT MY HEART 💔",
-  "🥺 NOOOO BABY WRONG 😭",
-  "💔 TRY AGAINNNNN 🥹",
+  "🥺 NOOO BABY WRONG 😭",
+  "💔 TRY AGAINNN 🥹",
   "😢 MY HEART IS CRYING"
 ];
 
+/* ❓ QUESTIONS */
 const quiz = [
   { q:"How much do you love me?", options:["Little","More","I no love","Infinity ❤️"], answer:3 },
   { q:"What is your first gift from me?", options:["Chocolate","Laici","McD","Bricks"], answer:0 },
@@ -133,6 +148,7 @@ const quiz = [
   { q:"What do you expect from me?", input:true }
 ];
 
+/* 📥 LOAD QUESTION */
 function loadQuestion(){
   document.getElementById("message").innerHTML = "";
   document.getElementById("options").innerHTML = "";
@@ -145,24 +161,26 @@ function loadQuestion(){
   } else {
     quiz[current].options.forEach((o,i)=>{
       document.getElementById("options").innerHTML +=
-        `<button onclick="check(${i})">${o}</button><br>`;
+        `<button onclick="check(${i})">${o}</button>`;
     });
   }
 }
 
+/* ❤️ HEARTS */
 function hearts(){
-  for(let i=0;i<15;i++){
-    let h=document.createElement("div");
-    h.className="heart";
-    h.innerText="❤️";
-    h.style.left=Math.random()*window.innerWidth+"px";
-    h.style.top="70%";
-    h.style.fontSize=(Math.random()*30+25)+"px";
+  for(let i=0;i<20;i++){
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random()*window.innerWidth + "px";
+    h.style.top = "70%";
+    h.style.fontSize = (Math.random()*35+30) + "px";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),2500);
+    setTimeout(()=>h.remove(),2800);
   }
 }
 
+/* ✔️ MCQ ANSWER */
 function check(i){
   answers.push({
     question: quiz[current].q,
@@ -172,43 +190,45 @@ function check(i){
 
   if(i === quiz[current].answer){
     playFor15Seconds(happy);
-    document.getElementById("message").className="big-love";
-    document.getElementById("message").innerHTML =
-      loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
+    message.className = "big-love";
+    message.innerHTML = loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
     hearts();
-    setTimeout(()=>{current++;loadQuestion();},1200);
+    setTimeout(()=>{current++;loadQuestion();},1300);
   } else {
     playFor15Seconds(sad);
-    document.getElementById("message").className="big-warning";
-    document.getElementById("message").innerText =
-      sadMessages[Math.floor(Math.random()*sadMessages.length)];
+    card.classList.add("shake");
+    message.className = "big-warning";
+    message.innerText = sadMessages[Math.floor(Math.random()*sadMessages.length)];
+    setTimeout(()=>card.classList.remove("shake"),400);
   }
 }
 
+/* 📝 TEXT ANSWER */
 function saveText(){
-  let t = document.getElementById("txt").value.trim();
+  let t = txt.value.trim();
   if(!t){ alert("Please write something 💌"); return; }
 
-  answers.push({
-    question: quiz[current].q,
-    answer: t
-  });
-
+  answers.push({ question: quiz[current].q, answer: t });
   current++;
   current < quiz.length ? loadQuestion() : showFinalMessage();
 }
 
+/* 🎉 FINAL */
 function showFinalMessage(){
   localStorage.setItem("loveQuizAnswers", JSON.stringify(answers));
 
-  document.getElementById("question").innerHTML = "💖 Quiz Finished 💖";
-  document.getElementById("options").innerHTML = "";
-  document.getElementById("message").className = "big-love";
-  document.getElementById("message").innerHTML =
-    "Thank you for answering everything 🥹💘<br>I love you infinity ♾️❤️";
+  question.innerHTML = "💖 Quiz Finished 💖";
+  options.innerHTML = "";
+  message.className = "big-love";
+  message.innerHTML =
+    "Thank you for answering everything 🥹💘<br>Taking you to something special… 💍❤️";
 
   hearts();
   playFor15Seconds(happy);
+
+  setTimeout(()=>{
+    window.location.href = "proposal.html";
+  },3000);
 }
 
 loadQuestion();
