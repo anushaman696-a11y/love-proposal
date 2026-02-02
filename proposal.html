@@ -51,25 +51,24 @@
       100%{transform:translateX(0)}
     }
 
-    /* 🎆 Fireworks */
+    /* 🎆 FIREWORKS */
     .firework {
       position: absolute;
-      width: 6px;
-      height: 6px;
-      background: transparent;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       box-shadow:
         0 0 red,
         0 0 yellow,
-        0 0 pink,
+        0 0 hotpink,
         0 0 cyan,
         0 0 violet;
-      animation: explode 1s ease-out infinite;
+      animation: explode 1.2s ease-out forwards;
     }
 
     @keyframes explode {
       from { transform: scale(0); opacity:1; }
-      to { transform: scale(6); opacity:0; }
+      to { transform: scale(8); opacity:0; }
     }
   </style>
 </head>
@@ -93,28 +92,53 @@
 </div>
 
 <script>
+const music = document.getElementById("yesMusic");
+let played = false;
+let timer;
+
+function playFor15Seconds(){
+  if(played) return;
+  played = true;
+
+  music.currentTime = 0;
+  music.play();
+
+  timer = setTimeout(()=>{
+    music.pause();
+    music.currentTime = 0;
+  },15000);
+}
+
 function yesAnswer(){
   document.getElementById("response").innerHTML =
     "😭❤️ SHE SAID YESSS!! Forever starts now 💍💖";
 
-  document.getElementById("yesMusic").play();
+  // 💾 store answer
+  localStorage.setItem("finalAnswer", "YES 💕");
 
-  // fireworks
-  for(let i=0;i<20;i++){
-    let f=document.createElement("div");
-    f.className="firework";
-    f.style.left=Math.random()*100+"vw";
-    f.style.top=Math.random()*100+"vh";
+  playFor15Seconds();
+
+  // 🎆 BIG FIREWORKS
+  for(let i=0;i<35;i++){
+    let f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = Math.random()*100 + "vw";
+    f.style.top = Math.random()*100 + "vh";
     document.body.appendChild(f);
-    setTimeout(()=>f.remove(),1000);
+    setTimeout(()=>f.remove(),1200);
   }
 }
 
 function noAnswer(){
-  const box=document.getElementById("box");
+  const box = document.getElementById("box");
   box.classList.add("shake");
+
   document.getElementById("response").innerHTML =
     "😤 NO not allowed… you’re already mine 😈💍❤️";
+
+  // 💾 store answer
+  localStorage.setItem("finalAnswer", "NO 🙄");
+
   setTimeout(()=>box.classList.remove("shake"),400);
 }
 </script>
