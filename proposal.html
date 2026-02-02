@@ -1,106 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>For You 💖</title>
-  <style>
-    body {
-      background: linear-gradient(#ff9a9e, #fad0c4);
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial;
-      overflow: hidden;
-    }
-
-    .box {
-      background: white;
-      padding: 30px;
-      border-radius: 25px;
-      text-align: center;
-      width: 330px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      animation: pop 0.8s;
-      z-index: 2;
-    }
-
-    h1 { color: #ff2e63; }
-    p { margin: 12px 0; }
-
-    button {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      background: #ff4d6d;
-      color: white;
-      cursor: pointer;
-      margin: 8px;
-    }
-
-    button.no { background:#555; }
-
-    .shake { animation: shake 0.4s; }
-
-    @keyframes shake {
-      0%{transform:translateX(0)}
-      25%{transform:translateX(-6px)}
-      50%{transform:translateX(6px)}
-      75%{transform:translateX(-6px)}
-      100%{transform:translateX(0)}
-    }
-
-    /* 🎆 FIREWORKS */
-    .firework {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      box-shadow:
-        0 0 red,
-        0 0 yellow,
-        0 0 hotpink,
-        0 0 cyan,
-        0 0 violet;
-      animation: explode 1.2s ease-out forwards;
-    }
-
-    @keyframes explode {
-      from { transform: scale(0); opacity:1; }
-      to { transform: scale(8); opacity:0; }
-    }
-  </style>
-</head>
-
-<body>
-
-<!-- 🎶 YES MUSIC -->
-<audio id="yesMusic">
-  <source src="song.mp3" type="audio/mpeg">
-</audio>
-
-<div class="box" id="box">
-  <h1>💖 My Love 💖</h1>
-  <p>Every question, every memory…</p>
-  <p>💍 Will you be mine forever?</p>
-
-  <button onclick="yesAnswer()">YES 💕</button>
-  <button class="no" onclick="noAnswer()">NO 🙄</button>
-
-  <div id="response"></div>
-</div>
-
 <script>
 const music = document.getElementById("yesMusic");
-let played = false;
-let timer;
+let timer = null;
 
 function playFor15Seconds(){
-  if(played) return;
-  played = true;
-
+  clearTimeout(timer);
+  music.pause();
   music.currentTime = 0;
+
   music.play();
 
   timer = setTimeout(()=>{
@@ -113,13 +19,15 @@ function yesAnswer(){
   document.getElementById("response").innerHTML =
     "😭❤️ SHE SAID YESSS!! Forever starts now 💍💖";
 
-  // 💾 store answer
   localStorage.setItem("finalAnswer", "YES 💕");
 
   playFor15Seconds();
 
+  // disable buttons
+  document.querySelectorAll("button").forEach(b => b.disabled = true);
+
   // 🎆 BIG FIREWORKS
-  for(let i=0;i<35;i++){
+  for(let i=0;i<40;i++){
     let f = document.createElement("div");
     f.className = "firework";
     f.style.left = Math.random()*100 + "vw";
@@ -136,12 +44,8 @@ function noAnswer(){
   document.getElementById("response").innerHTML =
     "😤 NO not allowed… you’re already mine 😈💍❤️";
 
-  // 💾 store answer
   localStorage.setItem("finalAnswer", "NO 🙄");
 
   setTimeout(()=>box.classList.remove("shake"),400);
 }
 </script>
-
-</body>
-</html>
