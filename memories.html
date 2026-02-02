@@ -12,72 +12,57 @@
     }
     .card {
       background: white;
-      width: 360px;
+      width: 350px;
       margin: auto;
-      padding: 22px;
-      border-radius: 22px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-      animation: fadeIn 0.6s;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+      animation: fadeIn 0.5s;
     }
-    h2 { color:#ff2e63; }
-
     button {
-      padding: 11px 20px;
+      padding: 10px 18px;
       margin: 8px;
       border: none;
-      border-radius: 25px;
+      border-radius: 20px;
       font-size: 15px;
       cursor: pointer;
       background: #ff4d6d;
       color: white;
-      transition: transform 0.2s;
     }
-    button:hover { transform: scale(1.05); }
-
     textarea {
       width: 90%;
-      height: 75px;
-      border-radius: 12px;
+      height: 70px;
+      border-radius: 10px;
       padding: 8px;
-      border:1px solid #ccc;
     }
-
-    .shake { animation: shake 0.35s; }
+    .shake { animation: shake 0.3s; }
     @keyframes shake {
-      0%{transform:translateX(0)}
-      25%{transform:translateX(-6px)}
-      50%{transform:translateX(6px)}
-      75%{transform:translateX(-6px)}
-      100%{transform:translateX(0)}
+      0% {transform: translateX(0);}
+      25% {transform: translateX(-5px);}
+      50% {transform: translateX(5px);}
+      75% {transform: translateX(-5px);}
+      100% {transform: translateX(0);}
     }
-
     @keyframes fadeIn {
       from {opacity:0; transform: scale(0.9);}
       to {opacity:1; transform: scale(1);}
     }
-
-    .heart, .broken {
+    .heart {
       position: absolute;
-      font-size: 24px;
+      font-size: 22px;
       animation: float 2s linear forwards;
     }
     @keyframes float {
       from {transform: translateY(0); opacity:1;}
-      to {transform: translateY(-180px); opacity:0;}
+      to {transform: translateY(-150px); opacity:0;}
     }
   </style>
 </head>
 
 <body>
 
-<!-- 🎶 Background Music -->
 <audio autoplay loop>
   <source src="song.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 😢 Sad Sound -->
-<audio id="sadSound">
-  <source src="sad.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card" id="card">
@@ -93,15 +78,7 @@ const loveQuotes = [
   "❤️ You are my today and all my tomorrows.",
   "💖 My heart chose you, always.",
   "🥹 Loving you is my favorite thing.",
-  "💘 You are my safest place.",
-  "🌸 Every love story is beautiful, but ours is my favorite."
-];
-
-const hurtMessages = [
-  "💔 Heyyy that hurt my hearttt… try again 😢❤️",
-  "🥺 Ouchhh… my heart just cried a little 💔",
-  "😢 Wrong answer baby… don’t break my heart like this 💕",
-  "💔 Awww nooo… my heart is hurting 😭"
+  "💘 You are my safest place."
 ];
 
 const quiz = [
@@ -132,73 +109,62 @@ const quiz = [
 let current = 0;
 let answers = [];
 
-function loadQuestion(){
-  document.getElementById("message").innerHTML="";
-  document.getElementById("options").innerHTML="";
-  document.getElementById("question").innerText=quiz[current].q;
+function loadQuestion() {
+  document.getElementById("message").innerHTML = "";
+  document.getElementById("options").innerHTML = "";
+  document.getElementById("question").innerText = quiz[current].q;
 
-  if(quiz[current].input){
-    options.innerHTML=
+  if (quiz[current].input) {
+    document.getElementById("options").innerHTML =
       `<textarea id="txt"></textarea><br>
        <button onclick="saveText()">Send 💌</button>`;
   } else {
     quiz[current].options.forEach((o,i)=>{
-      options.innerHTML+=`<button onclick="check(${i})">${o}</button><br>`;
+      document.getElementById("options").innerHTML +=
+        `<button onclick="check(${i})">${o}</button><br>`;
     });
   }
 }
 
-function hearts(){
-  for(let i=0;i<8;i++){
+function hearts() {
+  for(let i=0;i<6;i++){
     let h=document.createElement("div");
     h.className="heart";
     h.innerText="❤️";
     h.style.left=Math.random()*window.innerWidth+"px";
-    h.style.top="65%";
+    h.style.top="60%";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),2000);
   }
 }
 
-function brokenHearts(){
-  for(let i=0;i<6;i++){
-    let b=document.createElement("div");
-    b.className="broken";
-    b.innerText="💔";
-    b.style.left=Math.random()*window.innerWidth+"px";
-    b.style.top="65%";
-    document.body.appendChild(b);
-    setTimeout(()=>b.remove(),2000);
-  }
-}
-
 function check(i){
-  const card=document.getElementById("card");
   if(i===quiz[current].answer){
-    message.innerHTML=loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
+    document.getElementById("message").innerHTML =
+      loveQuotes[Math.floor(Math.random()*loveQuotes.length)];
     hearts();
-    setTimeout(()=>{current++;loadQuestion();},1300);
+    setTimeout(()=>{current++;loadQuestion();},1200);
   } else {
-    card.classList.add("shake");
-    document.getElementById("sadSound").play();
-    message.innerText=hurtMessages[Math.floor(Math.random()*hurtMessages.length)];
-    brokenHearts();
-    setTimeout(()=>card.classList.remove("shake"),350);
+    document.getElementById("card").classList.add("shake");
+    document.getElementById("message").innerText =
+      "😤 Heyyy wrong answer… try again 💔";
+    setTimeout(()=>document.getElementById("card").classList.remove("shake"),300);
   }
 }
 
 function saveText(){
-  let t=txt.value.trim();
-  if(!t){alert("Please write something 💌");return;}
-  answers.push(quiz[current].q+": "+t);
+  let t=document.getElementById("txt").value.trim();
+  if(!t){ alert("Please write something 💌"); return; }
+  answers.push(quiz[current].q + ": " + t);
   current++;
   if(current<quiz.length) loadQuestion();
   else sendMail();
 }
 
 function sendMail(){
-  let body=encodeURIComponent(answers.join("\n\n"));
-  window.location.href=`mailto:${email}?subject=💖 Love Answers&body=${body}`;
+  let body = encodeURIComponent(answers.join("\n\n"));
+  window.location.href =
+    `mailto:${email}?subject=💖 Love Answers&body=${body}`;
 }
 
 loadQuestion();
