@@ -41,6 +41,14 @@
       padding:10px;
     }
 
+    img{
+      width:100%;
+      border-radius:18px;
+      margin-top:15px;
+      box-shadow:0 8px 20px rgba(0,0,0,.25);
+      animation:fadeIn .8s;
+    }
+
     .shake{animation:shake .35s}
 
     @keyframes shake{
@@ -57,14 +65,14 @@
     }
 
     .big-love{
-      font-size:30px;
+      font-size:26px;
       font-weight:bold;
       color:#ff2e63;
       animation:pop .5s;
     }
 
     .big-warning{
-      font-size:30px;
+      font-size:28px;
       font-weight:bold;
       color:#b00020;
     }
@@ -91,6 +99,7 @@
 <!-- 🎵 MUSIC -->
 <audio id="happyMusic"><source src="song.mp3"></audio>
 <audio id="sadMusic"><source src="sad.mp3"></audio>
+<audio id="finalMusic"><source src="final.mp3"></audio>
 
 <div class="card" id="card">
   <h2 id="question"></h2>
@@ -99,24 +108,29 @@
 </div>
 
 <script>
-const happy=document.getElementById("happyMusic");
-const sad=document.getElementById("sadMusic");
-const card=document.getElementById("card");
-const question=document.getElementById("question");
-const options=document.getElementById("options");
-const message=document.getElementById("message");
+const happy = document.getElementById("happyMusic");
+const sad = document.getElementById("sadMusic");
+const finalSong = document.getElementById("finalMusic");
 
-let current=0;
-let answers=[];
+const card = document.getElementById("card");
+const question = document.getElementById("question");
+const options = document.getElementById("options");
+const message = document.getElementById("message");
+
+let current = 0;
 let musicTimer;
 
-/* 🎵 play music 15 sec */
+/* 🎵 PLAY MUSIC */
 function playFor15Seconds(audio){
   clearTimeout(musicTimer);
-  happy.pause(); sad.pause();
-  happy.currentTime=0; sad.currentTime=0;
+
+  happy.pause(); sad.pause(); finalSong.pause();
+  happy.currentTime = 0;
+  sad.currentTime = 0;
+  finalSong.currentTime = 0;
+
   audio.play();
-  musicTimer=setTimeout(()=>audio.pause(),15000);
+  musicTimer = setTimeout(()=>audio.pause(),15000);
 }
 
 /* 💖 TEXTS */
@@ -182,8 +196,6 @@ function hearts(){
 
 /* ✔️ MCQ */
 function check(i){
-  answers.push({q:quiz[current].q,a:quiz[current].options[i]});
-
   if(i===quiz[current].answer){
     playFor15Seconds(happy);
     message.className="big-love";
@@ -202,7 +214,6 @@ function check(i){
 /* 📝 TEXT */
 function saveText(){
   if(!txt.value.trim()) return alert("Write something 💌");
-  answers.push({q:quiz[current].q,a:txt.value});
   current++;
   current<quiz.length?loadQuestion():showFinalMessage();
 }
@@ -220,10 +231,18 @@ function showFinalMessage(){
   playFor15Seconds(happy);
 }
 
+/* 💖 FINAL IMAGE + MUSIC */
 function valentineYes(){
-  message.innerHTML="😭❤️ SHE SAID YESSS!! My forever Valentine 💍💖";
+  question.innerHTML="💖 Forever Us 💖";
+  options.innerHTML=`<img src="our.jpg">`;
+  message.className="big-love";
+  message.innerHTML=
+    "From this moment, it’s always you. 💕<br>" +
+    "My best friend, my love, my forever Valentine. 🌹<br>" +
+    "No matter where life takes us, my heart chooses you… every single day. ♾️❤️";
+
   hearts();
-  playFor15Seconds(happy);
+  playFor15Seconds(finalSong);
 }
 
 function valentineNo(){
